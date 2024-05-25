@@ -3,6 +3,7 @@
 import useProgressBar from "@/lib/useProgressBar";
 import useVideoSequence from "@/lib/useVideoSequence";
 import { VideoFile } from "@/lib/videos";
+import Image from "next/image";
 import { useRef, useState } from "react";
 
 interface Props {
@@ -10,7 +11,8 @@ interface Props {
 }
 
 export default function Player({ initialVideo }: Props) {
-  const { videoSrc, pickChoice, isFinalVideo } = useVideoSequence(initialVideo);
+  const { videoSrc, pickChoice, isFinalVideo, sequence } =
+    useVideoSequence(initialVideo);
   const { progress, initializeInterval, resetProgress } = useProgressBar();
   const [hasPicked, setHasPicked] = useState(false);
   const [gameOver, setGameOver] = useState(false);
@@ -57,30 +59,50 @@ export default function Player({ initialVideo }: Props) {
     setGameOver(true);
   }
 
+  function buildVideo() {
+    return (
+      <>
+        <video
+          ref={videoRef}
+          autoPlay={true}
+          src={videoSrc}
+          onPlay={onVideoPlay}
+          onEnded={onVideoEnded}
+        />
+        <ProgressBar percent={progress} />
+      </>
+    );
+  }
+
+  function buildGameOver() {
+    return (
+      <div className="w-full h-full | flex flex-col items-center p-5 sm:p-10 gap-5 sm:gap-10">
+        <h1 className="text-xl sm:text-3xl md:text-6xl">{sequence}</h1>
+        <Image
+          src=""
+          alt={sequence}
+          width={500}
+          height={500}
+          className="h-full"
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full">
       <div className="w-full h-full flex flex-col items-center p-5 sm:p-10">
         <div
           id="video-player"
-          className="relative w-full sm:max-w-[90%] aspect-video overflow-hidden | rounded-2xl bg-white -z-10"
+          className="relative w-full sm:max-w-[90%] aspect-video overflow-hidden | rounded-2xl bg-black -z-10 shadow-2xl"
         >
-          {!gameOver && (
-            <>
-              <video
-                ref={videoRef}
-                autoPlay={true}
-                src={videoSrc}
-                onPlay={onVideoPlay}
-                onEnded={onVideoEnded}
-              />
-              <ProgressBar percent={progress} />
-            </>
-          )}
+          {!gameOver && buildVideo()}
+          {gameOver && buildGameOver()}
         </div>
         <div className="w-full | flex flex-row items-center justify-center p-5 gap-5">
           <button onClick={pickFirst}>Pick 1</button>
           <button onClick={pickSecond}>Pick 2</button>
-          isFinalVideo: {isFinalVideo.toString()}
+          {/* isFinalVideo: {isFinalVideo.toString()} */}
           <button onClick={() => videoRef?.current?.play()}>Play</button>
         </div>
       </div>

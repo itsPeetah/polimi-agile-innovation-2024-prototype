@@ -13,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="w-screen h-screen bg-black text-white">{children}</body>
+      <body className="w-screen h-screen bg-gradient-to-b from-chocolate-light to-chocolate-dark text-white">
+        {children}
+      </body>
     </html>
   );
 }
