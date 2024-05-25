@@ -11,7 +11,9 @@ export type VideoFile = {
 export type Choice = "a" | "b";
 
 function getVideoFilePath(fileName: string): string {
-  return `/video/silent/${fileName}`;
+  const videoPath = `/video/silent/${fileName}`;
+  const isDev = process.env.NODE_ENV === "development";
+  return isDev ? videoPath : `https://pgmp.me${videoPath}`;
 }
 
 /* ##############################################
