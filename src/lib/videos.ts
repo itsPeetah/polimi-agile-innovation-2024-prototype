@@ -11,7 +11,7 @@ export type VideoFile = {
 export type Choice = "a" | "b";
 
 function getVideoFilePath(fileName: string): string {
-  const videoPath = `/video/silent/${fileName}`;
+  const videoPath = `/video/sound/${fileName}`;
   const isDev = process.env.NODE_ENV === "development";
   return isDev
     ? videoPath
