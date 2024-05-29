@@ -1,8 +1,10 @@
 "use client";
 
 import PrefetchedVideoPlayer from "@/components/PrefetchedVideoPlayer";
+import getFilePath from "@/lib/getFilePath";
 import videos, { Choice, VideoFile } from "@/lib/videos";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { createRef, useRef, useState } from "react";
 
 export default function PreloadingPlayer() {
@@ -25,19 +27,19 @@ export default function PreloadingPlayer() {
 
     setCurrentChoice(() => null);
     setGameOver(() => false);
-    updateDisplayedVideo(videos[0]);
+    updateDisplayedVideo(videos[0], false);
   }
 
   function makeChoice(choice: Choice) {
     setCurrentChoice(() => choice);
   }
 
-  function updateDisplayedVideo(next: VideoFile) {
+  function updateDisplayedVideo(next: VideoFile, play: boolean = true) {
     const index = getVideoIndex(next, videos);
     const tx = getTranslatePercent(index);
     setCurrentVideo(() => next);
     setTranslateX(() => tx);
-    videoElementRefs.current[index].current?.play();
+    if (play) videoElementRefs.current[index].current?.play();
   }
 
   function onVideoEnded() {
@@ -53,11 +55,35 @@ export default function PreloadingPlayer() {
   }
 
   function Overlay() {
-    return <></>;
+    return (
+      <div className="absolute top-0 left-0 z-30 | w-full h-full">
+        {/* Pre start */}
+        {!isReady && (
+          <div className="relative w-full h-full">
+            <Image
+              src={getFilePath("/loadingthumbnail.jpg")}
+              alt="loading..."
+              width={1280}
+              height={720}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute bottom-10 w-full">
+              <h1 className="text-center text-4xl">Initializing</h1>
+              <h2>
+                The app needs a one-time initialization to guarantee fast media
+                load times
+              </h2>
+            </div>
+          </div>
+        )}
+        {/* Finish! */}
+        {gameOver && <div className="w-full h-full bg-blue-500"></div>}
+      </div>
+    );
   }
 
   return (
-    <div className="w-full h-full">
+    <div className="w-[90%] h-full mx-auto">
       {/* Video Player View */}
       <div className="relative | w-full aspect-video overflow-hidden">
         {/* Video reel */}

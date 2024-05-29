@@ -1,3 +1,5 @@
+import getFilePath from "./getFilePath";
+
 export type VideoFile = {
   name: string;
   duration: number;
@@ -11,11 +13,7 @@ export type VideoFile = {
 export type Choice = "a" | "b";
 
 function getVideoFilePath(fileName: string): string {
-  const videoPath = `/video/sound/${fileName}`;
-  const isDev = process.env.NODE_ENV === "development";
-  return isDev
-    ? videoPath
-    : `https://pgmp.me/polimi-agile-innovation-2024-prototype${videoPath}`;
+  return getFilePath(`/video/sound/${fileName}`);
 }
 
 /* ##############################################
