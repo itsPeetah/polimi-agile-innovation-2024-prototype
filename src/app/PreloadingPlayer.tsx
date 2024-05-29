@@ -69,7 +69,7 @@ export default function PreloadingPlayer() {
             />
             <div className="absolute bottom-10 w-full">
               <h1 className="text-center text-4xl">Initializing</h1>
-              <h2>
+              <h2 className="text-center">
                 The app needs a one-time initialization to guarantee fast media
                 load times
               </h2>
@@ -77,7 +77,11 @@ export default function PreloadingPlayer() {
           </div>
         )}
         {/* Finish! */}
-        {gameOver && <div className="w-full h-full bg-blue-500"></div>}
+        {gameOver && (
+          <div className="w-full h-full flex flex-row items-center justify-center">
+            game over I&apos;m adding the images now don&apos;t worry
+          </div>
+        )}
       </div>
     );
   }
@@ -107,10 +111,17 @@ export default function PreloadingPlayer() {
         {(!isReady || gameOver) && <Overlay />}
       </div>
       {/* Buttons */}
-      <div className=" w-full | flex flex-row gap-4 p-2 justify-center">
-        <div>{isReady.toString()}</div>
+      <div className=" w-full | flex flex-row gap-4 p-2 justify-center items-center">
+        <div>
+          {isReady ? (
+            <div className="w-3 h-3 bg-green-500 rounded-full" />
+          ) : (
+            <div className="w-3 h-3 bg-orange-400 rounded-full" />
+          )}
+        </div>
         <div className="flex-grow" />
         <button
+          className="p-2 border rounded-xl"
           style={{
             transform: currentChoice === "a" ? "scale(120%)" : undefined,
           }}
@@ -119,6 +130,7 @@ export default function PreloadingPlayer() {
           Pick 1
         </button>
         <button
+          className="p-2 border rounded-xl"
           style={{
             transform: currentChoice === "b" ? "scale(120%)" : undefined,
           }}
