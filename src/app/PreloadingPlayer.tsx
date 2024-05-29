@@ -3,8 +3,7 @@
 import PrefetchedVideoPlayer from "@/components/PrefetchedVideoPlayer";
 import getFilePath from "@/lib/getFilePath";
 import videos, { Choice, VideoFile } from "@/lib/videos";
-import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
-import { ArrowPathIcon, HeartIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { createRef, useRef, useState } from "react";
 
@@ -18,13 +17,15 @@ export default function PreloadingPlayer() {
   const [currentChoice, setCurrentChoice] = useState<Choice | null>(null);
   const [gameOver, setGameOver] = useState(false);
   const [translateX, setTranslateX] = useState("0%");
+  const [currentSequence, setCurrentSequence] = useState<string[]>([]);
 
   function restart() {
     resetAllVideos();
 
     setCurrentChoice(() => null);
-    setGameOver(() => false);
+    setCurrentSequence(() => []);
     updateDisplayedVideo(videos[0], false);
+    setGameOver(() => false);
   }
 
   function makeChoice(choice: Choice) {
@@ -54,6 +55,7 @@ export default function PreloadingPlayer() {
     }
 
     setCurrentChoice(() => null);
+    setCurrentSequence((prev) => [...prev, next.symbol]);
     updateDisplayedVideo(next);
   }
 
@@ -70,6 +72,11 @@ export default function PreloadingPlayer() {
       if (!ref.current) return;
       ref.current.load();
     });
+  }
+
+  function getImageUrl() {
+    const fileName = currentSequence.reduce((acc, curr) => `${acc}-${curr}`);
+    return getFilePath(`/product-images/${fileName}.png`);
   }
 
   function Overlay() {
@@ -102,7 +109,15 @@ export default function PreloadingPlayer() {
                 We recommend you try this product
               </p>
             </div>
-            <div className="w-full h-full bg-red-800">image + bg</div>
+            <div className="w-full h-full bg-chocolate-light">
+              <Image
+                src={getImageUrl()}
+                alt={"product"}
+                width={500}
+                height={500}
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         )}
       </div>
@@ -136,7 +151,7 @@ export default function PreloadingPlayer() {
           {(!isReady || gameOver) && <Overlay />}
         </div>
         {/* Buttons */}
-        <div className=" w-full | flex flex-row gap-4 p-2 justify-center items-center">
+        <div className=" w-full | flex flex-row gap-2 p-2 justify-between items-center">
           <div>
             {isReady ? (
               <div className="w-3 h-3 bg-green-500 rounded-full" />
@@ -144,6 +159,9 @@ export default function PreloadingPlayer() {
               <div className="w-3 h-3 bg-orange-400 rounded-full" />
             )}
           </div>
+          <button className="underline" onClick={forceLoadAllVideos}>
+            Initialize (Mobile)
+          </button>
           <div className="flex-grow" />
           <button
             className="p-2 border rounded-xl"
@@ -164,9 +182,7 @@ export default function PreloadingPlayer() {
             Pick 2
           </button>
           <div className="flex-grow" />
-          <button onClick={forceLoadAllVideos}>
-            <ArrowDownOnSquareIcon className="z-10 w-6 h-6" strokeWidth={2} />
-          </button>
+
           <button onClick={restart}>
             <ArrowPathIcon className="z-10 w-6 h-6" strokeWidth={2} />
           </button>

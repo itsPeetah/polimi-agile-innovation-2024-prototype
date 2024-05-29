@@ -23,13 +23,13 @@ function getVideoFilePath(fileName: string): string {
 const scene4a: VideoFile = {
   name: getVideoFilePath("Scene 4a.mp4"),
   duration: 0,
-  symbol: "🍊",
+  symbol: "orange",
 };
 
 const scene4b: VideoFile = {
   name: getVideoFilePath("Scene 4b.mp4"),
   duration: 0,
-  symbol: "🍪",
+  symbol: "bisc",
 };
 
 const scene3a: VideoFile = {
@@ -39,7 +39,7 @@ const scene3a: VideoFile = {
     a: scene4a,
     b: scene4b,
   },
-  symbol: "☕️",
+  symbol: "cocoa",
 };
 
 const scene3b: VideoFile = {
@@ -49,7 +49,7 @@ const scene3b: VideoFile = {
     a: scene4a,
     b: scene4b,
   },
-  symbol: "🍬",
+  symbol: "sugar",
 };
 
 const scene2a: VideoFile = {
@@ -59,7 +59,7 @@ const scene2a: VideoFile = {
     a: scene3a,
     b: scene3b,
   },
-  symbol: "🥛",
+  symbol: "milk",
 };
 
 const scene2b: VideoFile = {
@@ -69,7 +69,7 @@ const scene2b: VideoFile = {
     a: scene3a,
     b: scene3b,
   },
-  symbol: "💧",
+  symbol: "water",
 };
 
 const scene1: VideoFile = {
