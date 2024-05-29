@@ -3,6 +3,7 @@
 import PrefetchedVideoPlayer from "@/components/PrefetchedVideoPlayer";
 import getFilePath from "@/lib/getFilePath";
 import videos, { Choice, VideoFile } from "@/lib/videos";
+import { ArrowDownOnSquareIcon } from "@heroicons/react/24/outline";
 import { ArrowPathIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { createRef, useRef, useState } from "react";
@@ -19,11 +20,7 @@ export default function PreloadingPlayer() {
   const [translateX, setTranslateX] = useState("0%");
 
   function restart() {
-    videoElementRefs.current!.forEach((ref) => {
-      if (!ref.current) return;
-      ref.current.pause();
-      ref.current.currentTime = 0;
-    });
+    resetAllVideos();
 
     setCurrentChoice(() => null);
     setGameOver(() => false);
@@ -32,6 +29,8 @@ export default function PreloadingPlayer() {
 
   function makeChoice(choice: Choice) {
     setCurrentChoice(() => choice);
+    resetAllVideos();
+    chooseNextVideo(choice);
   }
 
   function updateDisplayedVideo(next: VideoFile, play: boolean = true) {
@@ -44,6 +43,10 @@ export default function PreloadingPlayer() {
 
   function onVideoEnded() {
     const choice = currentChoice ?? (Math.random() >= 0.5 ? "b" : "a");
+    chooseNextVideo(choice);
+  }
+
+  function chooseNextVideo(choice: Choice) {
     const next = getNextVideo(currentVideo, choice);
     if (!next) {
       setGameOver(true);
@@ -52,6 +55,21 @@ export default function PreloadingPlayer() {
 
     setCurrentChoice(() => null);
     updateDisplayedVideo(next);
+  }
+
+  function resetAllVideos() {
+    videoElementRefs.current!.forEach((ref) => {
+      if (!ref.current) return;
+      ref.current.pause();
+      ref.current.currentTime = 0;
+    });
+  }
+
+  function forceLoadAllVideos() {
+    videoElementRefs.current!.forEach((ref) => {
+      if (!ref.current) return;
+      ref.current.load();
+    });
   }
 
   function Overlay() {
@@ -146,6 +164,9 @@ export default function PreloadingPlayer() {
             Pick 2
           </button>
           <div className="flex-grow" />
+          <button onClick={forceLoadAllVideos}>
+            <ArrowDownOnSquareIcon className="z-10 w-6 h-6" strokeWidth={2} />
+          </button>
           <button onClick={restart}>
             <ArrowPathIcon className="z-10 w-6 h-6" strokeWidth={2} />
           </button>

@@ -1,5 +1,5 @@
 import usePrefetchVideoUrl from "@/lib/usePrefetchVideoUrl";
-import React, { Ref, useState } from "react";
+import React, { Ref, useEffect, useState } from "react";
 
 interface Props {
   videoSrc: string;
@@ -36,7 +36,7 @@ export default function PrefetchedVideoPlayer({
       controls
       onCanPlay={onCanPlay}
       onEnded={props.onEnded}
-      preload={"auto"}
+      // preload={"auto"}
     />
   );
 }

@@ -21,6 +21,7 @@ export default function usePrefetchVideoUrl(
       setStartedDownloading(() => true);
       prefetchVideo(src, onSuccess, (err) => console.error(err));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
 
   return { objectUrl, startedDownloading, isDownloaded };
