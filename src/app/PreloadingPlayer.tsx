@@ -159,38 +159,44 @@ export default function PreloadingPlayer() {
               <div className="w-3 h-3 bg-orange-400 rounded-full" />
             )}
           </div>
-          <button className="underline" onClick={forceLoadAllVideos}>
-            Initialize (Mobile)
-          </button>
+
+          {!isReady && (
+            <button className="underline" onClick={forceLoadAllVideos}>
+              Initialize (Mobile)
+            </button>
+          )}
+
           <div className="flex-grow" />
-          <button
-            className="p-2 border rounded-xl"
-            style={{
-              transform: currentChoice === "a" ? "scale(120%)" : undefined,
-            }}
-            onClick={() => makeChoice("a")}
-          >
-            Pick 1
-          </button>
-          <button
-            className="p-2 border rounded-xl"
-            style={{
-              transform: currentChoice === "b" ? "scale(120%)" : undefined,
-            }}
-            onClick={() => makeChoice("b")}
-          >
-            Pick 2
-          </button>
+          {isReady && (
+            <>
+              <button
+                className="p-2 border rounded-xl"
+                style={{
+                  transform: currentChoice === "a" ? "scale(120%)" : undefined,
+                }}
+                onClick={() => makeChoice("a")}
+              >
+                Pick 1
+              </button>
+              <button
+                className="p-2 border rounded-xl"
+                style={{
+                  transform: currentChoice === "b" ? "scale(120%)" : undefined,
+                }}
+                onClick={() => makeChoice("b")}
+              >
+                Pick 2
+              </button>
+            </>
+          )}
           <div className="flex-grow" />
 
-          <button onClick={restart}>
-            <ArrowPathIcon className="z-10 w-6 h-6" strokeWidth={2} />
-          </button>
+          {isReady && (
+            <button onClick={restart}>
+              <ArrowPathIcon className="z-10 w-6 h-6" strokeWidth={2} />
+            </button>
+          )}
         </div>
-      </div>
-      <div>
-        <h6>debug info</h6>
-        <div className="">{JSON.stringify(readyVideos)}</div>
       </div>
     </>
   );
