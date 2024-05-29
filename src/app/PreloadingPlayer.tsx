@@ -1,11 +1,9 @@
 "use client";
 
 import PrefetchedVideoPlayer from "@/components/PrefetchedVideoPlayer";
-import usePreloadedVideos from "@/lib/usePreloadedVideos";
-import useRefMap from "@/lib/useRefMap";
 import videos, { Choice, VideoFile } from "@/lib/videos";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { Ref, createRef, useEffect, useRef, useState } from "react";
+import { createRef, useRef, useState } from "react";
 
 export default function PreloadingPlayer() {
   const videoElementRefs = useRef(
