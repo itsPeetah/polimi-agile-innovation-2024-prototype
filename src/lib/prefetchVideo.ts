@@ -11,6 +11,7 @@ export default async function prefetchVideo(
   //   xhr.open("GET", url, true);
   //   xhr.responseType = "blob";
   try {
+    console.log("Started downloading video", url);
     const response = await fetch(url);
     const blob = await response.blob();
     const objectUrl = getWindowURL().createObjectURL(blob);
