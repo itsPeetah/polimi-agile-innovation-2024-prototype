@@ -29,6 +29,7 @@ export default function PrefetchedVideoPlayer({
 
   return (
     <video
+      playsInline
       ref={videoElementRef}
       className="w-full h-full"
       src={src}
