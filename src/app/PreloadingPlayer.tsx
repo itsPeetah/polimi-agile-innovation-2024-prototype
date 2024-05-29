@@ -3,7 +3,7 @@
 import PrefetchedVideoPlayer from "@/components/PrefetchedVideoPlayer";
 import getFilePath from "@/lib/getFilePath";
 import videos, { Choice, VideoFile } from "@/lib/videos";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { ArrowPathIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { createRef, useRef, useState } from "react";
 
@@ -12,7 +12,7 @@ export default function PreloadingPlayer() {
     videos.map((v) => createRef<HTMLVideoElement>())
   );
 
-  const { isReady, addReady } = useCheckReady(videos.length);
+  const { isReady, addReady, readyVideos } = useCheckReady(videos.length);
   const [currentVideo, setCurrentVideo] = useState(videos[0]);
   const [currentChoice, setCurrentChoice] = useState<Choice | null>(null);
   const [gameOver, setGameOver] = useState(false);
@@ -79,7 +79,12 @@ export default function PreloadingPlayer() {
         {/* Finish! */}
         {gameOver && (
           <div className="w-full h-full flex flex-row items-center justify-center">
-            game over I&apos;m adding the images now don&apos;t worry
+            <div className="w-full h-full flex flex-col items-center justify-center gap-4 bg-chocolate-dark">
+              <p className="font-bold text-xl max-w-[60%] text-center">
+                We recommend you try this product
+              </p>
+            </div>
+            <div className="w-full h-full bg-red-800">image + bg</div>
           </div>
         )}
       </div>
@@ -87,63 +92,70 @@ export default function PreloadingPlayer() {
   }
 
   return (
-    <div className="w-[90%] h-full mx-auto">
-      {/* Video Player View */}
-      <div className="relative | w-full aspect-video overflow-hidden">
-        {/* Video reel */}
-        <div
-          className="relative w-full h-full | flex flex-row "
-          style={{ transform: `translateX(-${translateX})` }}
-        >
-          {videos.map((v, i) => {
-            return (
-              <PrefetchedVideoPlayer
-                key={v.name}
-                videoElementRef={videoElementRefs.current!.at(i)!}
-                videoSrc={v.name}
-                onCanPlay={() => addReady(v.name)}
-                onEnded={onVideoEnded}
-              />
-            );
-          })}
+    <>
+      <div className="w-full md:max-w-[90%] h-full mx-auto">
+        {/* Video Player View */}
+        <div className="relative | w-full aspect-video overflow-hidden">
+          {/* Video reel */}
+          <div
+            className="relative w-full h-full | flex flex-row "
+            style={{ transform: `translateX(-${translateX})` }}
+          >
+            {videos.map((v, i) => {
+              return (
+                <PrefetchedVideoPlayer
+                  key={v.name}
+                  useNativePreload
+                  videoElementRef={videoElementRefs.current!.at(i)!}
+                  videoSrc={v.name}
+                  onCanPlay={() => addReady(v.name)}
+                  onEnded={onVideoEnded}
+                />
+              );
+            })}
+          </div>
+          {/* Overlay */}
+          {(!isReady || gameOver) && <Overlay />}
         </div>
-        {/* Overlay */}
-        {(!isReady || gameOver) && <Overlay />}
-      </div>
-      {/* Buttons */}
-      <div className=" w-full | flex flex-row gap-4 p-2 justify-center items-center">
-        <div>
-          {isReady ? (
-            <div className="w-3 h-3 bg-green-500 rounded-full" />
-          ) : (
-            <div className="w-3 h-3 bg-orange-400 rounded-full" />
-          )}
+        {/* Buttons */}
+        <div className=" w-full | flex flex-row gap-4 p-2 justify-center items-center">
+          <div>
+            {isReady ? (
+              <div className="w-3 h-3 bg-green-500 rounded-full" />
+            ) : (
+              <div className="w-3 h-3 bg-orange-400 rounded-full" />
+            )}
+          </div>
+          <div className="flex-grow" />
+          <button
+            className="p-2 border rounded-xl"
+            style={{
+              transform: currentChoice === "a" ? "scale(120%)" : undefined,
+            }}
+            onClick={() => makeChoice("a")}
+          >
+            Pick 1
+          </button>
+          <button
+            className="p-2 border rounded-xl"
+            style={{
+              transform: currentChoice === "b" ? "scale(120%)" : undefined,
+            }}
+            onClick={() => makeChoice("b")}
+          >
+            Pick 2
+          </button>
+          <div className="flex-grow" />
+          <button onClick={restart}>
+            <ArrowPathIcon className="z-10 w-6 h-6" strokeWidth={2} />
+          </button>
         </div>
-        <div className="flex-grow" />
-        <button
-          className="p-2 border rounded-xl"
-          style={{
-            transform: currentChoice === "a" ? "scale(120%)" : undefined,
-          }}
-          onClick={() => makeChoice("a")}
-        >
-          Pick 1
-        </button>
-        <button
-          className="p-2 border rounded-xl"
-          style={{
-            transform: currentChoice === "b" ? "scale(120%)" : undefined,
-          }}
-          onClick={() => makeChoice("b")}
-        >
-          Pick 2
-        </button>
-        <div className="flex-grow" />
-        <button onClick={restart}>
-          <ArrowPathIcon className="z-10 w-6 h-6" strokeWidth={2} />
-        </button>
       </div>
-    </div>
+      <div>
+        <h6>debug info</h6>
+        <div className="">{JSON.stringify(readyVideos)}</div>
+      </div>
+    </>
   );
 }
 
@@ -153,7 +165,7 @@ function useCheckReady(howMany: number) {
   function addReady(video: string) {
     setReadyVideos((prev) => [...prev, video]);
   }
-  return { isReady, addReady };
+  return { isReady, addReady, readyVideos };
 }
 
 function getNextVideo(current: VideoFile, choice: Choice) {

@@ -4,6 +4,7 @@ import React, { Ref, useState } from "react";
 interface Props {
   videoSrc: string;
   videoElementRef: Ref<HTMLVideoElement>;
+  useNativePreload?: boolean;
   onEnded: () => void;
   onCanPlay?: () => void;
 }
@@ -13,8 +14,11 @@ export default function PrefetchedVideoPlayer({
   videoElementRef,
   ...props
 }: Props) {
-  const { objectUrl, isDownloaded, startedDownloading } =
-    usePrefetchVideoUrl(videoSrc);
+  const {
+    objectUrl: src,
+    isDownloaded,
+    startedDownloading,
+  } = usePrefetchVideoUrl(videoSrc, props.useNativePreload);
   const [canPlay, setCanPlay] = useState(false);
 
   function onCanPlay() {
@@ -27,10 +31,11 @@ export default function PrefetchedVideoPlayer({
     <video
       ref={videoElementRef}
       className="w-full h-full"
-      src={objectUrl}
+      src={src}
       controls
       onCanPlay={onCanPlay}
       onEnded={props.onEnded}
+      preload={"auto"}
     />
   );
 }
