@@ -33,7 +33,7 @@ export default function PrefetchedVideoPlayer({
       ref={videoElementRef}
       className="w-full h-full"
       src={src}
-      controls
+      controls={false}
       onCanPlay={onCanPlay}
       onEnded={props.onEnded}
       // preload={"auto"}

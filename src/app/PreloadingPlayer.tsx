@@ -18,14 +18,16 @@ export default function PreloadingPlayer() {
   const [gameOver, setGameOver] = useState(false);
   const [translateX, setTranslateX] = useState("0%");
   const [currentSequence, setCurrentSequence] = useState<string[]>([]);
+  const [hasStarted, setHasStarted] = useState(false);
 
   function restart() {
     resetAllVideos();
 
     setCurrentChoice(() => null);
     setCurrentSequence(() => []);
-    updateDisplayedVideo(videos[0], false);
+    updateDisplayedVideo(videos[0], true);
     setGameOver(() => false);
+    // setHasStarted(() => false);
   }
 
   function makeChoice(choice: Choice) {
@@ -40,6 +42,11 @@ export default function PreloadingPlayer() {
     setCurrentVideo(() => next);
     setTranslateX(() => tx);
     if (play) videoElementRefs.current[index].current?.play();
+  }
+
+  function startGame() {
+    setHasStarted(() => true);
+    videoElementRefs.current[0].current?.play();
   }
 
   function onVideoEnded() {
@@ -120,6 +127,17 @@ export default function PreloadingPlayer() {
             </div>
           </div>
         )}
+        {/* Start game */}
+        {!hasStarted && (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-black bg-opacity-50">
+            <button
+              className="p-4 rounded-3xl bg-sky-600 text-white font-bold text-2xl"
+              onClick={startGame}
+            >
+              Start
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -148,7 +166,7 @@ export default function PreloadingPlayer() {
             })}
           </div>
           {/* Overlay */}
-          {(!isReady || gameOver) && <Overlay />}
+          {(!isReady || gameOver || !hasStarted) && <Overlay />}
         </div>
         {/* Buttons */}
         <div className=" w-full | flex flex-row gap-2 p-2 justify-between items-center">
