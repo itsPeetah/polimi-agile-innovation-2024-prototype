@@ -16,6 +16,5 @@ The solution we created is a multi-branch, user-choice-driven interactive video,
 
 The prototype was developed as a NextJS app.
 
-- [Version 1](branch-version-1-link) had
-
-[branch-version-1-link]: https://github.com/itsPeetah/polimi-agile-innovation-2024-prototype/tree/version-1
+- [Version 1](https://github.com/itsPeetah/polimi-agile-innovation-2024-prototype/tree/version-1) just replaced the `src` attribute of a video element per choice. The solution worked for what we needed, but could be improved by preloading all videos
+- [Current Version](https://github.com/itsPeetah/polimi-agile-innovation-2024-prototype/tree/main)'s code is a little janky because it was quickly arranged the day before the final presentation. I decided to preload the videos, causing an initial waiting time but guaranteeing a seamless experience even through multiple executions
