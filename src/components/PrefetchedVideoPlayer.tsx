@@ -31,7 +31,7 @@ export default function PrefetchedVideoPlayer({
     <video
       playsInline
       ref={videoElementRef}
-      className="w-full h-full"
+      className="w-full h-full flex-shrink-0"
       src={src}
       controls={false}
       onCanPlay={onCanPlay}
